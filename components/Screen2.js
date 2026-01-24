@@ -6,30 +6,30 @@ import { Bubble, GiftedChat } from "react-native-gifted-chat";
 const Screen2 = ({ route, navigation }) => {
   // Extract the user's name and selected background color from navigation route parameters
   const { name, backgroundColor } = route.params;
-  // State to hold chat messages
-  const [messages, setMessages] = useState([]);
-
-  // Initialize chat with welcome messages when component mounts
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
+  // Prepare initial messages so they appear immediately on load
+  const now = new Date();
+  const initialMessages = [
+    {
+      _id: 1,
+      text: 'Hello developer',
+      createdAt: new Date(now.getTime() - 1000),
+      user: {
         _id: 2,
-        text: `${name} has joined the chat`,
-        createdAt: new Date(),
-        system: true,
+        name: 'React Native',
+        avatar: 'https://placeimg.com/140/140/any',
       },
-    ]);
-  }, []);
+    },
+    {
+      _id: 2,
+      text: `${name} has joined the chat`,
+      createdAt: now,
+      system: true,
+    },
+  ];
+  // State to hold chat messages (initialized with welcome messages)
+  const [messages, setMessages] = useState(initialMessages);
+
+  // Messages are initialized above; no need for an effect here
 
   // Handler for sending new messages - appends new messages to existing message list
   const onSend = (newMessages) => {
