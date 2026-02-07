@@ -1,8 +1,20 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
+import { Alert, StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
+import { getAuth, signInAnonymously } from 'firebase/auth';
+import { initializeApp, getApps } from 'firebase/app';
 
-// Screen1 - The start/home screen where users enter their name and select a background color
-const Screen1 = ({ navigation }) => {
+// Start - The start/home screen where users enter their name and select a background color
+const firebaseConfig = {
+  apiKey: "AIzaSyAu_9rx8331da8RqYX5B3flE1G4Tkyb_Tc",
+  authDomain: "meet-app-ac9c6.firebaseapp.com",
+  projectId: "meet-app-ac9c6",
+  storageBucket: "meet-app-ac9c6.firebasestorage.app",
+  messagingSenderId: "1017297275614",
+  appId: "1:1017297275614:web:ed67fab0fa0d1925dcd04f"
+};
+
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const Start = ({ navigation }) => {
   // State for storing the user's entered name
   const [name, setName] = useState('');
   
@@ -12,13 +24,35 @@ const Screen1 = ({ navigation }) => {
   // Array of available background colors for the chat screen
   const colors = ['#090C08', '#474056', '#8A95A5', '#B9C6AE'];
 
+  const signInUser = () => {
+    const auth = getAuth(app);
+    const displayName = name.trim() || 'Anonymous';
+
+    signInAnonymously(auth)
+      .then((result) => {
+        if (result?.user) {
+          navigation.navigate('Chat', {
+            userId: result.user.uid,
+            name: displayName,
+            backgroundColor: backgroundColor,
+          });
+        } else {
+          Alert.alert('Sign-in Error', 'No user returned from sign-in. Please try again.');
+        }
+      })
+      .catch((error) => {
+        Alert.alert('Sign-in Error', 'Could not sign in. Please check your internet connection and try again.');
+        console.error('Anonymous sign-in failed:', error);
+      });
+  };
+
   return (
     <ImageBackground 
       source={require('../assets/Background-Image.png')} 
       style={styles.container}
       resizeMode="cover"
     >
-      <Text style={styles.title}>Hello Screen1!</Text>
+      <Text style={styles.title}>Hello Chatters!</Text>
       
       <TextInput
         style={styles.textInput}
@@ -46,10 +80,10 @@ const Screen1 = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Button to navigate to Screen2 with name and selected background color */}
+      {/* Button to sign in and navigate to Chat */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Screen2', { name: name, backgroundColor: backgroundColor })}
+        onPress={signInUser}
       >
         <Text style={styles.buttonText}>Start Chatting</Text>
       </TouchableOpacity>
@@ -122,4 +156,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Screen1;
+export default Start;
