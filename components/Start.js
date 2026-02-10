@@ -47,83 +47,114 @@ const Start = ({ navigation }) => {
   };
 
   return (
-    <ImageBackground 
-      source={require('../assets/Background-Image.png')} 
+    <KeyboardAvoidingView
       style={styles.container}
-      resizeMode="cover"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
-      <Text style={styles.title}>Hello Chatters!</Text>
-      
-      <TextInput
-        style={styles.textInput}
-        value={name}
-        onChangeText={setName}
-        placeholder='Type your username here'
-      />
-
-      <View style={styles.colorContainer}>
-        <Text style={styles.colorText}>Choose Background Color:</Text>
-        <View style={styles.colorOptions}>
-          {/* Map through colors array and create a touchable circle for each color */}
-          {colors.map((color) => (
-            <TouchableOpacity
-              key={color}
-              style={[
-                styles.colorCircle,
-                { backgroundColor: color },
-                // Apply white border if this color is selected
-                backgroundColor === color && styles.selectedColor
-              ]}
-              onPress={() => setBackgroundColor(color)}
-            />
-          ))}
-        </View>
-      </View>
-
-      {/* Button to sign in and navigate to Chat */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={signInUser}
+      <ImageBackground 
+        source={require('../assets/Background-Image.png')} 
+        style={styles.image}
+        resizeMode="cover"
       >
-        <Text style={styles.buttonText}>Start Chatting</Text>
-      </TouchableOpacity>
-    </ImageBackground>
+        <View style={styles.header}>
+          <Text style={styles.title}>Hello Chatters!</Text>
+          <Text style={styles.subtitle}>Pick a name and a background</Text>
+        </View>
+
+        <View style={styles.card}>
+          <TextInput
+            style={styles.textInput}
+            value={name}
+            onChangeText={setName}
+            placeholder='Type your username here'
+            placeholderTextColor={'#8F8A9A'}
+          />
+
+          <View style={styles.colorContainer}>
+            <Text style={styles.colorText}>Choose Background Color:</Text>
+            <View style={styles.colorOptions}>
+              {/* Map through colors array and create a touchable circle for each color */}
+              {colors.map((color) => (
+                <TouchableOpacity
+                  key={color}
+                  style={[
+                    styles.colorCircle,
+                    { backgroundColor: color },
+                    // Apply white border if this color is selected
+                    backgroundColor === color && styles.selectedColor
+                  ]}
+                  onPress={() => setBackgroundColor(color)}
+                />
+              ))}
+            </View>
+          </View>
+
+          {/* Button to sign in and navigate to Chat */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={signInUser}
+          >
+            <Text style={styles.buttonText}>Start Chatting</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
+  header: {
     alignItems: 'center',
-    padding: 20
+    marginTop: 24,
   },
   title: {
-    fontSize: 45,
-    fontWeight: '600',
+    fontSize: 40,
+    fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: 20
+  },
+  subtitle: {
+    marginTop: 6,
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: 16,
+  },
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    borderRadius: 14,
+    padding: 18,
+    marginBottom: 28,
   },
   textInput: {
-    width: "88%",
-    padding: 15,
+    width: '100%',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
     borderWidth: 1,
-    marginTop: 15,
-    marginBottom: 15,
+    borderColor: '#E2E2EA',
+    marginTop: 6,
+    marginBottom: 14,
     fontSize: 16,
-    fontWeight: '300',
-    color: '#757083',
+    fontWeight: '400',
+    color: '#2B2B2B',
     backgroundColor: '#FFFFFF',
-    borderRadius: 2
+    borderRadius: 8,
   },
   colorContainer: {
-    width: '88%',
-    marginVertical: 20
+    width: '100%',
+    marginVertical: 10
   },
   colorText: {
-    fontSize: 16,
-    fontWeight: '300',
-    color: '#757083',
+    fontSize: 15,
+    fontWeight: '400',
+    color: '#6E6A7C',
     marginBottom: 10
   },
   colorOptions: {
@@ -132,22 +163,23 @@ const styles = StyleSheet.create({
   },
   // Color circles: 50x50 with borderRadius of 25 (50/2) to make them perfectly round
   colorCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginHorizontal: 5
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    marginHorizontal: 4,
+    borderWidth: 2,
+    borderColor: 'transparent'
   },
   // Style applied to the currently selected color circle
   selectedColor: {
-    borderWidth: 3,
-    borderColor: '#FFFFFF'
+    borderColor: '#111111'
   },
   button: {
-    width: '88%',
+    width: '100%',
     backgroundColor: '#757083',
-    padding: 15,
+    paddingVertical: 12,
     alignItems: 'center',
-    borderRadius: 2
+    borderRadius: 8
   },
   buttonText: {
     fontSize: 16,
