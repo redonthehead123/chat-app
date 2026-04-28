@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, KeyboardAvoidingView, Platform } from 'react-na
 import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import { addDoc, collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomActions from './CustomActions';
 
 // Chat - The chat screen that receives name and backgroundColor from Start
 const Chat = ({ route, navigation, db, isConnected }) => {
@@ -78,6 +79,7 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         renderBubble={renderBubble}
         renderInputToolbar={renderInputToolbar}
         onSend={messages => onSend(messages)}
+        renderActions={renderCustomActions}
         user={{
           _id: userId,
           name: name,
